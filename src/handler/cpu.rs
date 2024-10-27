@@ -1,8 +1,8 @@
+use crate::SYSTEM;
 use salvo::prelude::*;
 use serde::Serialize;
-use crate::SYSTEM;
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize)]
 struct CPU {
     name: Vec<String>,   //CPU名称
     vendor: Vec<String>, //CPU销售商代码
@@ -14,10 +14,8 @@ struct CPU {
 impl CPU {
     fn new() -> Self {
         //刷新CPU相关信息
-        {
-            let mut sys =SYSTEM.lock().unwrap();
-            sys.refresh_cpu_all();
-        }
+        let mut sys = SYSTEM.lock().unwrap();
+        sys.refresh_cpu_all();
         //构造对应的数组
         let mut vec_name: Vec<String> = Vec::new();
         let mut vec_vendor: Vec<String> = Vec::new();
@@ -25,15 +23,12 @@ impl CPU {
         let mut vec_usage: Vec<f32> = Vec::new();
         let mut vec_brand: Vec<String> = Vec::new();
         //遍历
-        {
-            let sys=SYSTEM.lock().unwrap();
-            for cpu in sys.cpus() {
-                vec_name.push(cpu.name().to_string());
-                vec_vendor.push(cpu.vendor_id().to_string());
-                vec_frequency.push(cpu.frequency());
-                vec_usage.push(cpu.cpu_usage());
-                vec_brand.push(cpu.brand().to_string());
-            }
+        for cpu in sys.cpus() {
+            vec_name.push(cpu.name().to_string());
+            vec_vendor.push(cpu.vendor_id().to_string());
+            vec_frequency.push(cpu.frequency());
+            vec_usage.push(cpu.cpu_usage());
+            vec_brand.push(cpu.brand().to_string());
         }
         CPU {
             name: vec_name,
