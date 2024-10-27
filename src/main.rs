@@ -3,6 +3,15 @@ mod handler;
 
 use salvo::prelude::*;
 use salvo::logging::Logger;
+use sysinfo::System;
+use lazy_static::lazy_static;
+use std::sync::{Arc,Mutex};
+
+lazy_static!{
+    static ref SYSTEM:Arc<Mutex<System>> = Arc::new(Mutex::new(System::new()));
+}
+
+
 
 
 #[tokio::main]
