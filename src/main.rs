@@ -3,13 +3,14 @@ mod handler;
 
 use salvo::prelude::*;
 use salvo::logging::Logger;
-use sysinfo::{System,Disks};
+use sysinfo::{System,Disks,Networks};
 use lazy_static::lazy_static;
 use std::sync::{Arc,Mutex};
 
 lazy_static!{
     static ref SYSTEM:Arc<Mutex<System>> = Arc::new(Mutex::new(System::new()));
     static ref DISKS:Arc<Mutex<Disks>> = Arc::new(Mutex::new(Disks::new()));
+    static ref NETWORKS:Arc<Mutex<Networks>> = Arc::new(Mutex::new(Networks::new()));
 }
 
 
