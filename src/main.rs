@@ -1,6 +1,7 @@
 mod router;
 mod handler;
 
+use tera::Tera;
 use salvo::prelude::*;
 use salvo::logging::Logger;
 use sysinfo::{System,Disks,Networks};
@@ -11,6 +12,11 @@ lazy_static!{
     static ref SYSTEM:Arc<Mutex<System>> = Arc::new(Mutex::new(System::new()));
     static ref DISKS:Arc<Mutex<Disks>> = Arc::new(Mutex::new(Disks::new()));
     static ref NETWORKS:Arc<Mutex<Networks>> = Arc::new(Mutex::new(Networks::new()));
+    static ref TEMPLATES:Tera={
+        let mut tera=Tera::new("templates/**/*.html").unwrap();
+        tera.full_reload().unwrap();
+        tera
+    };
 }
 
 
