@@ -1,20 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link
-            rel="stylesheet"
-            href="/static/css/paper.min.css"
-    />
-    <title>Rust is best</title>
+{%extends "base.html" %}
 
-</head>
-<body>
-<div class="paper container">
-    <h1>Some Fresh Title</h1>
-    <p>This is where some content would go.</p>
+{% block title %}System Monitor Server - Dashboard{% endblock title %}
+
+{% block main_content %}
+<!--CPU负载-->
+<div class="card">
+    <div class="card-body">
+        <div id="cpu-usage-line"></div>
+    </div>
 </div>
-</body>
-</html>
+<hr>
+<!--内存消耗-->
+<div class="card">
+    <div class="card-body">
+        <div id="mem-pie"></div>
+    </div>
+</div>
+{% endblock mian_content %}
+
+{% block side_content %}
+<div class="paper">
+    <div class="row">
+        <p>💻System Name: {{system_name}}</p>
+        <p>🛜Hostname: {{hostname}}</p>
+        <p>🪟OS Version: {{os_version}}</p>
+        <p>🥜Kernel Version: {{kernel_version}}</p>
+        <p>🔑Distribution ID: {{distribution_id}}</p>
+        <p>⚡CPU Architecture: {{cpu_arch}}</p>
+    </div>
+</div>
+<div class="paper">
+    <div class="row flex-center">
+        <h3>Made with ♥️ by Simon Yen</h3>
+        <h4>If you like it, please <a href="https://github.com/SimonYen/System-Monitor-Server" target="_blank">⭐</a> it!
+        </h4>
+    </div>
+</div>
+{% endblock side_content %}
+
+{%block js%}
+<script src="/static/js/dashboard.js"></script>
+{%endblock js%}

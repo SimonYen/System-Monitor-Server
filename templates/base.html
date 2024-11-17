@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <link
+            rel="stylesheet"
+            href="/static/css/paper.min.css"
+    />
+    <script src="/static/js/echarts.min.js"></script>
+    <script src="/static/js/jquery.min.js"></script>
+    <title>{% block title %}System Monitor Server{% endblock title %}</title>
+</head>
+<body>
+<!--导航栏-->
+<nav class="border fixed split-nav">
+    <div class="nav-brand">
+        <h3><a href="/">System Monitor Server</a></h3>
+    </div>
+    <div class="collapsible">
+        <input id="collapsible1" type="checkbox" name="collapsible1">
+        <label for="collapsible1">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+            <div class="bar4"></div>
+            <div class="bar5"></div>
+        </label>
+        <div class="collapsible-body">
+            <ul class="inline">
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="#">CPU</a></li>
+                <li><a href="#">Memory</a></li>
+                <li><a href="#">Network</a></li>
+                <li><a href="#">Disks</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!--主页面-->
+<div class="paper container-lg">
+    <div class="row">
+        <div class="sm-12 md-8 col">
+            {% block main_content %}Hello World!{% endblock main_content %}
+        </div>
+        <div class="sm-12 md-4 col">
+            {% block side_content %}Hello World!{% endblock side_content %}
+        </div>
+    </div>
+</div>
+<!--自定义js代码-->
+{%block js%}{%endblock js%}
+</body>
+</html>
