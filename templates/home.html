@@ -16,17 +16,35 @@
         <div id="mem-pie"></div>
     </div>
 </div>
+<hr>
+<!--网速使用-->
+<div class="row">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <div id="network-download-speed"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <div id="network-upload-speed"></div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock mian_content %}
 
 {% block side_content %}
 <div class="paper">
     <div class="row">
-        <p>💻System Name: {{system_name}}</p>
-        <p>🛜Hostname: {{hostname}}</p>
-        <p>🪟OS Version: {{os_version}}</p>
-        <p>🥜Kernel Version: {{kernel_version}}</p>
-        <p>🔑Distribution ID: {{distribution_id}}</p>
-        <p>⚡CPU Architecture: {{cpu_arch}}</p>
+        <p>System Name: {{system_name}}</p>
+        <p>Hostname: {{hostname}}</p>
+        <p>OS Version: {{os_version}}</p>
+        <p>Kernel Version: {{kernel_version}}</p>
+        <p>Distribution ID: {{distribution_id}}</p>
+        <p>CPU Architecture: {{cpu_arch}}</p>
     </div>
 </div>
 <div class="paper">

@@ -31,6 +31,21 @@ $(document).ready(function () {
 
     cpu_usage_line.setOption(option);
 
+    //切换主题
+    $('#toggle-theme').click(function () {
+        var isDark=false;
+        if($('#toggle-theme').text()==='🌙'){
+            isDark=true;
+        }
+        cpu_usage_line.dispose();
+        if (isDark){
+            cpu_usage_line = echarts.init(document.getElementById('cpu-usage-line'),'dark',{height:500,weight:null});
+        }else{
+            cpu_usage_line = echarts.init(document.getElementById('cpu-usage-line'),null,{height:500,weight:null});
+        }
+        cpu_usage_line.setOption(option);
+    });
+
     // 用于存储时间和 CPU 负载数据
     var timeData = [];
     var cpuData = [];
@@ -48,7 +63,7 @@ $(document).ready(function () {
             cpuData.push(averageUsage);
 
             // 限制数据点数量
-            if (timeData.length > 30) {
+            if (timeData.length > 99) {
                 timeData.shift();
                 cpuData.shift();
             }
@@ -71,13 +86,12 @@ $(document).ready(function () {
         var h=$('#cpu-usage-line').height();
         cpu_usage_line.resize({height: h,weight: w});
     });
-    // 每隔 2 秒更新一次图表
-    setInterval(updateCPUChart, 2000);
+    // 每隔 1 秒更新一次图表
+    setInterval(updateCPUChart, 1000);
 });
 
 //内存部分
 $(document).ready(function (){
-    //获取cpu使用率图
     var mem_pie = echarts.init(document.getElementById('mem-pie'),null,{height:500,weight:null});
     var option = {
         title: {
@@ -128,6 +142,22 @@ $(document).ready(function (){
         ]
     };
     mem_pie.setOption(option);
+
+    //切换主题
+    $('#toggle-theme').click(function () {
+        var isDark=false;
+        if($('#toggle-theme').text()==='🌙'){
+            isDark=true;
+        }
+        mem_pie.dispose();
+        if (isDark){
+            mem_pie = echarts.init(document.getElementById('mem-pie'),'dark',{height:500,weight:null});
+        }else{
+            mem_pie = echarts.init(document.getElementById('mem-pie'),null,{height:500,weight:null});
+        }
+        mem_pie.setOption(option);
+    });
+
     //定义更新内存文字的函数
     function updateChart(){
         $.getJSON('/api/mem',function (data){
@@ -157,4 +187,130 @@ $(document).ready(function (){
         mem_pie.resize({height: h,weight: w});
     });
     setInterval(updateChart, 2000);
+});
+
+
+//网络部分
+$(document).ready(function () {
+    var down_chart = echarts.init(document.getElementById('network-download-speed'),null,{height:500,weight:null});
+    var up_chart = echarts.init(document.getElementById('network-upload-speed'),null,{height:500,weight:null});
+    var option1 = {
+        title: {
+            text: 'Network Download Speed Monitor',
+            left: 'center'
+        },
+        tooltip: {
+            formatter: '{a} <br/>{b} : {c}'
+        },
+        series: [
+            {
+                name: 'Download Speed',
+                type: 'gauge',
+                progress: {
+                    show: true
+                },
+                detail: {
+                    valueAnimation: true,
+                    formatter: '{value}'
+                },
+                data: [
+                    {
+                        value: 0,
+                        name: 'MB'
+                    }
+                ]
+            }
+        ]
+    };
+    var option2 = {
+        title: {
+            text: 'Network Upload Speed Monitor',
+            left: 'center'
+        },
+        tooltip: {
+            formatter: '{a} <br/>{b} : {c}'
+        },
+        series: [
+            {
+                name: 'Upload Speed',
+                type: 'gauge',
+                progress: {
+                    show: true
+                },
+                detail: {
+                    valueAnimation: true,
+                    formatter: '{value}'
+                },
+                data: [
+                    {
+                        value: 0,
+                        name: 'MB'
+                    }
+                ]
+            }
+        ]
+    };
+    down_chart.setOption(option1);
+    up_chart.setOption(option2);
+
+    //切换主题
+    $('#toggle-theme').click(function () {
+        var isDark=false;
+        if($('#toggle-theme').text()==='🌙'){
+            isDark=true;
+        }
+        down_chart.dispose();
+        up_chart.dispose();
+        if (isDark){
+            up_chart = echarts.init(document.getElementById('network-upload-speed'),'dark',{height:500,weight:null});
+            down_chart = echarts.init(document.getElementById('network-download-speed'),'dark',{height:500,weight:null});
+        }else{
+            up_chart = echarts.init(document.getElementById('network-upload-speed'),null,{height:500,weight:null});
+            down_chart = echarts.init(document.getElementById('network-download-speed'),null,{height:500,weight:null});
+        }
+        down_chart.setOption(option1);
+        up_chart.setOption(option2);
+    });
+
+    function updateChart(){
+        $.getJSON('/api/net',function (data){
+            //计算当前网速
+            var down_speed=0;
+            var up_speed=0;
+            data.interfaces.forEach((item)=>{
+               down_speed+=item.data.received;
+               up_speed+=item.data.transmitted;
+            });
+            down_chart.setOption({
+                series: [{
+                    data: [
+                        {
+                            value: (down_speed/125000).toFixed(2),
+                            name: 'Mb'
+                        }
+                    ]
+                }]
+            });
+            up_chart.setOption({
+                series: [{
+                    data: [
+                        {
+                            value: (up_speed/125000).toFixed(2),
+                            name: 'Mb'
+                        }
+                    ]
+                }]
+            });
+        });
+    }
+    //监测页面大小发生变化时
+    // 绑定 resize 事件
+    $(window).resize(function () {
+        //获取高宽
+        var w=$('#network-download-speed').width();
+        var h=$('#network-download-speed').height();
+        down_chart.resize({height: h,weight: w});
+        up_chart.resize({height: h,weight: w});
+    });
+    setInterval(updateChart, 500);
 });

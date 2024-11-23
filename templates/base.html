@@ -22,18 +22,10 @@
         <input id="collapsible1" type="checkbox" name="collapsible1">
         <label for="collapsible1">
             <div class="bar1"></div>
-            <div class="bar2"></div>
-            <div class="bar3"></div>
-            <div class="bar4"></div>
-            <div class="bar5"></div>
         </label>
         <div class="collapsible-body">
             <ul class="inline">
-                <li><a href="/">Dashboard</a></li>
-                <li><a href="#">CPU</a></li>
-                <li><a href="#">Memory</a></li>
-                <li><a href="#">Network</a></li>
-                <li><a href="#">Disks</a></li>
+                <li><a href="#" class="paper-btn" id="toggle-theme">🌙</a></li>
             </ul>
         </div>
     </div>
@@ -51,5 +43,19 @@
 </div>
 <!--自定义js代码-->
 {%block js%}{%endblock js%}
+<script>
+    $(document).ready(function() {
+        $('#toggle-theme').click(function() {
+            $('html').toggleClass('dark');
+            //取出当前主题
+            var current_theme=$('#toggle-theme').text();
+            if (current_theme==='🌙'){
+                $('#toggle-theme').text('☀️');
+            }else {
+                $('#toggle-theme').text('🌙');
+            }
+        });
+    });
+</script>
 </body>
 </html>
