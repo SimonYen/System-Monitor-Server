@@ -39,12 +39,12 @@
 {% block side_content %}
 <div class="paper">
     <div class="row">
-        <p>System Name: {{system_name}}</p>
-        <p>Hostname: {{hostname}}</p>
-        <p>OS Version: {{os_version}}</p>
-        <p>Kernel Version: {{kernel_version}}</p>
-        <p>Distribution ID: {{distribution_id}}</p>
-        <p>CPU Architecture: {{cpu_arch}}</p>
+        <p ><span class="badge">System Name: {{system_name}}</span></p>
+        <p><span class="badge secondary">Hostname: {{hostname}}</span></p>
+        <p><span class="badge success">OS Version: {{os_version}}</span></p>
+        <p><span class="badge warning">Kernel Version: {{kernel_version}}</span></p>
+        <p><span class="badge danger">Distribution ID: {{distribution_id}}</span></p>
+        <p><span class="badge">CPU Architecture: {{cpu_arch}}</span></p>
     </div>
 </div>
 <div class="paper">
