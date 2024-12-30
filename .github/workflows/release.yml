@@ -61,10 +61,18 @@ jobs:
           mkdir -p release
           # Move the built binary where you want it
           mv "${BIN_OUTPUT}" "./release/${BIN_RELEASE}"
-          cp -r "static" "./release"
-          cp -r "static" "./release"
+          mv "static" "./release"
+          mv "static" "./release"
           if [ ${{ runner.os }} == 'Linux' ] || [ ${{ runner.os }} == 'macOS' ]; then
-            tar -czvf release/package.tar.gz -C release .
+            tar -czf "package.tar.gz" "release"
+            echo "ASSET=package.tar.gz" >> $GITHUB_ENV
           else
-            powershell -Command "Compress-Archive -Path release/* -DestinationPath release/package.zip"
+            7z a "package.zip" "release"
+            echo "ASSET=package.zip" >> $GITHUB_ENV
           fi
+
+      - name: Release
+          uses: softprops/action-gh-release@v1
+          with:
+            files: |
+              ${{ env.ASSET }}
