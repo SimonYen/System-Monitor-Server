@@ -1,0 +1,51 @@
+name: release.yml
+on:
+  push:
+    tags:
+      - 'v*'  # 仅在推送以 'v' 开头的标签时触发
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          override-file: Cargo.toml
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Create release package
+        run: |
+          mkdir -p release
+          if [ ${{ runner.os }} == 'Windows' ]; then
+            cp target/release/system_monitor.exe release/  # 替换为你的二进制文件名
+          else
+            cp target/release/system_monitor release/  # 替换为你的二进制文件名
+          fi
+          cp -r templates release/
+          cp -r static release/
+          if [ ${{ runner.os }} == 'Linux' ] || [ ${{ runner.os }} == 'macOS' ]; then
+            tar -czvf release/package.tar.gz -C release .
+          else
+            powershell -Command "Compress-Archive -Path release/* -DestinationPath release/package.zip"
+          fi
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          tag: ${{ github.ref }}
+          files: |
+            release/package.tar.gz
+            release/package.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
