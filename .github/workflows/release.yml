@@ -1,51 +1,78 @@
 name: release.yml
+
 on:
   push:
     tags:
-      - 'v*'  # 仅在推送以 'v' 开头的标签时触发
+      - "v*"
+
+permissions:
+  contents: write
+
 jobs:
-  build:
+  build-and-upload:
+    name: Build and upload
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        # You can add more, for any target you'd like!
+        include:
+          - build: linux
+            os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+
+          - build: macos
+            os: macos-latest
+            target: x86_64-apple-darwin
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Set up Rust
-        uses: actions-rs/toolchain@v1
+      - name: Get the release version from the tag
+        shell: bash
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Install Rust
+        # Or @nightly if you want
+        uses: dtolnay/rust-toolchain@stable
+        # Arguments to pass in
         with:
-          toolchain: stable
-          override: true
-          override-file: Cargo.toml
+          # Make Rust compile to our target (defined in the matrix)
+          targets: ${{ matrix.target }}
 
       - name: Build
-        run: cargo build --release
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --verbose --release --target ${{ matrix.target }}
 
-      - name: Create release package
+      - name: Build archive
+        shell: bash
         run: |
-          mkdir -p release
-          if [ ${{ runner.os }} == 'Windows' ]; then
-            cp target/release/system_monitor.exe release/  # 替换为你的二进制文件名
+          # Replace with the name of your binary
+          binary_name="<BINARY_NAME>"
+
+          dirname="$binary_name-${{ env.VERSION }}-${{ matrix.target }}"
+          mkdir "$dirname"
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            mv "target/${{ matrix.target }}/release/$binary_name.exe" "$dirname"
           else
-            cp target/release/system_monitor release/  # 替换为你的二进制文件名
+            mv "target/${{ matrix.target }}/release/$binary_name" "$dirname"
           fi
-          cp -r templates release/
-          cp -r static release/
-          if [ ${{ runner.os }} == 'Linux' ] || [ ${{ runner.os }} == 'macOS' ]; then
-            tar -czvf release/package.tar.gz -C release .
+          mv "static" "$dirname"
+          mv "templates" "$dirname"
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            7z a "$dirname.zip" "$dirname"
+            echo "ASSET=$dirname.zip" >> $GITHUB_ENV
           else
-            powershell -Command "Compress-Archive -Path release/* -DestinationPath release/package.zip"
+            tar -czf "$dirname.tar.gz" "$dirname"
+            echo "ASSET=$dirname.tar.gz" >> $GITHUB_ENV
           fi
 
-      - name: Upload Release Asset
+      - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag: ${{ github.ref }}
           files: |
-            release/package.tar.gz
-            release/package.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            ${{ env.ASSET }}
