@@ -3,6 +3,8 @@ on:
   push:
     tags:
       - 'v*'
+permissions:
+  contents: write
 env:
   # The project name specified in your Cargo.toml
   PROJECT_NAME: system_monitor
@@ -70,7 +72,7 @@ jobs:
           fi
 
       - name: Upload Release Asset
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag: ${{ github.ref }}
           files: |
