@@ -62,7 +62,7 @@ jobs:
           # Move the built binary where you want it
           mv "${BIN_OUTPUT}" "./release/${BIN_RELEASE}"
           mv "static" "./release"
-          mv "static" "./release"
+          mv "templates" "./release"
           if [ ${{ runner.os }} == 'Linux' ] || [ ${{ runner.os }} == 'macOS' ]; then
             tar -czf "package.tar.gz" "release"
             echo "ASSET=package.tar.gz" >> $GITHUB_ENV
