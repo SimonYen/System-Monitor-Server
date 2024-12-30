@@ -65,14 +65,16 @@ jobs:
           mv "templates" "./release"
           if [ ${{ runner.os }} == 'Linux' ] || [ ${{ runner.os }} == 'macOS' ]; then
             tar -czf "package.tar.gz" "release"
-            echo "ASSET=package.tar.gz" >> $GITHUB_ENV
           else
             7z a "package.zip" "release"
-            echo "ASSET=package.zip" >> $GITHUB_ENV
           fi
 
-      - name: Release
+      - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
+          tag: ${{ github.ref }}
           files: |
-            ${{ env.ASSET }}
+            package.tar.gz
+            package.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
