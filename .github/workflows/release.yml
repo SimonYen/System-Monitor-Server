@@ -66,9 +66,9 @@ jobs:
           mv "static" "./release"
           mv "templates" "./release"
           if [ ${{ runner.os }} == 'Linux' ] || [ ${{ runner.os }} == 'macOS' ]; then
-            tar -czf "package.tar.gz" "release"
+            tar -czf "${{ matrix.name }}package.tar.gz" "release"
           else
-            7z a "package.zip" "release"
+            7z a "${{ matrix.name }}package.zip" "release"
           fi
 
       - name: Upload Release Asset
@@ -76,7 +76,7 @@ jobs:
         with:
           tag: ${{ github.ref }}
           files: |
-            package.tar.gz
-            package.zip
+            ${{ matrix.name }}package.tar.gz
+            ${{ matrix.name }}package.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
