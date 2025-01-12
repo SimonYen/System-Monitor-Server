@@ -8,7 +8,7 @@ A server monitoring program written in Rust.
 ![light view](https://github.com/SimonYen/System-Monitor-Server/blob/master/demo/light%20view.png)
 🌙night view
 
-![night view](https://github.com/SimonYen/System-Monitor-Server/blob/master/demo/night%20view.png)
+![night view](https://github.com/SimonYen/System-Monitor-Server/blob/master/demo/dark%20view.png)
 
 ## Features
 
