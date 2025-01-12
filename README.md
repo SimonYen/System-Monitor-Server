@@ -1,6 +1,12 @@
 # System-Monitor-Server
 A server monitoring program written in Rust.
 
+## Live Demo
+
+https://system-monitor-server.onrender.com
+
+Thanks for [Render](https://render.com/).
+
 ## Screenshot
 
 ☀light view
@@ -25,4 +31,4 @@ Just download the binary from release, and run the following command:
 
 The server will run on localhost:9999.
 
-And you can add '-h' command argument for more information.
+And you can add '--help' command argument for more information.
